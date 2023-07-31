@@ -5,18 +5,22 @@ import { useNotesContext } from "@/context/NoteContext";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { notes, loadNotes } = useNotesContext();
-
-  useEffect(() => {
-    loadNotes();
-  }, []);
+  const { loading, notes, loadNotes } = useNotesContext();
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div>
+    <div className="flex py-8 justify-center h-screen">
+      <div className="flex flex-col h-full">
         <NoteForm />
 
-        <div className="flex flex-col py-2 gap-2">
+        {
+          <div className="text-base text-white">
+            Notes:{" "}
+            <span className="text-sm italic">
+              {loading ? "loading... " : ""}
+            </span>
+          </div>
+        }
+        <div className="flex flex-col py-2 gap-2 overflow-y-auto">
           {notes?.map((note) => {
             return <NoteCard key={note.id} note={note} />;
           })}

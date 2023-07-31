@@ -5,4 +5,5 @@ export interface Note {
 
 export type NoteItem = Note & {
   id: number;
+  createdAt: string;
 };
