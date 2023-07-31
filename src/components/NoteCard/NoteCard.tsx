@@ -3,7 +3,7 @@ import { NoteItem } from "@/interfaces/hookforms.interfaces";
 import { useNotesContext } from "@/context/NoteContext";
 
 const NoteCard = ({ note }: { note: NoteItem }) => {
-  const { deleteNote } = useNotesContext();
+  const { deleteNote, setSelectedNote } = useNotesContext();
 
   const handleClickDelete = async () => {
     if (confirm(`Are you sure you want to delete this note? - ${note.title}`)) {
@@ -13,6 +13,7 @@ const NoteCard = ({ note }: { note: NoteItem }) => {
 
   const handleClickEdit = () => {
     //
+    setSelectedNote?.(note);
   };
 
   return (

@@ -12,6 +12,8 @@ const NoteContext = createContext<{
   loadNotes: () => Promise<void>;
   createNote: (note: Note) => Promise<void>;
   deleteNote: (id: number) => Promise<void>;
+  selectedNote?: NoteItem;
+  setSelectedNote?: (note?: NoteItem) => void;
 }>({
   notes: [],
   loadNotes: async () => {},
@@ -21,6 +23,7 @@ const NoteContext = createContext<{
 
 export const NotesProvider = ({ children }: NotesProviderProps) => {
   const [notes, setNotes] = useState<NoteItem[]>([]);
+  const [selectedNote, setSelectedNote] = useState<NoteItem>();
 
   async function loadNotes() {
     const res = await fetch("/api/notes");
@@ -56,7 +59,16 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
   }
 
   return (
-    <NoteContext.Provider value={{ notes, loadNotes, createNote, deleteNote }}>
+    <NoteContext.Provider
+      value={{
+        notes,
+        loadNotes,
+        createNote,
+        deleteNote,
+        selectedNote,
+        setSelectedNote,
+      }}
+    >
       {children}
     </NoteContext.Provider>
   );
