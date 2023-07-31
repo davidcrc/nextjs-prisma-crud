@@ -10,7 +10,7 @@ const NoteForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    setFocus,
     reset,
     formState: { errors },
   } = useForm({
@@ -22,8 +22,13 @@ const NoteForm = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     createNote(data);
+    setFocus("title");
     reset();
   });
+
+  React.useEffect(() => {
+    setFocus("title");
+  }, [setFocus]);
 
   return (
     <form onSubmit={onSubmit}>

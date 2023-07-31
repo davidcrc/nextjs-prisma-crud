@@ -1,20 +1,26 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { Note } from "@/interfaces/hookforms.interfaces";
+import { Note, NoteItem } from "@/interfaces/hookforms.interfaces";
 
 interface NotesProviderProps {
   children: React.ReactNode;
 }
 
 const NoteContext = createContext<{
-  notes: any[];
+  notes: NoteItem[];
   loadNotes: () => Promise<void>;
-  createNote: (note: Note) => void;
-}>({ notes: [], loadNotes: async () => {}, createNote: () => {} });
+  createNote: (note: Note) => Promise<void>;
+  deleteNote: (id: number) => Promise<void>;
+}>({
+  notes: [],
+  loadNotes: async () => {},
+  createNote: async () => {},
+  deleteNote: async () => {},
+});
 
 export const NotesProvider = ({ children }: NotesProviderProps) => {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<NoteItem[]>([]);
 
   async function loadNotes() {
     const res = await fetch("/api/notes");
@@ -39,8 +45,18 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
     setNotes((notes) => [newNote, ...notes]);
   }
 
+  async function deleteNote(id: number) {
+    const res = await fetch(`http://localhost:3000/api/notes/${id}`, {
+      method: "DELETE",
+    });
+
+    const deletedNote = await res.json();
+
+    setNotes(notes.filter((note) => note.id !== deletedNote.id));
+  }
+
   return (
-    <NoteContext.Provider value={{ notes, loadNotes, createNote }}>
+    <NoteContext.Provider value={{ notes, loadNotes, createNote, deleteNote }}>
       {children}
     </NoteContext.Provider>
   );

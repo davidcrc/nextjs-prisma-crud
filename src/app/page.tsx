@@ -1,6 +1,6 @@
 "use client";
 
-import { NoteForm } from "@/components";
+import { NoteCard, NoteForm } from "@/components";
 import { useNotesContext } from "@/context/NoteContext";
 import { useEffect } from "react";
 
@@ -17,12 +17,8 @@ export default function Home() {
         <NoteForm />
 
         <div className="flex flex-col py-2 gap-2">
-          {notes?.map((note, index) => {
-            return (
-              <div key={note.id} className="bg-slate-400 p-4">
-                {note.title}
-              </div>
-            );
+          {notes?.map((note) => {
+            return <NoteCard key={note.id} note={note} />;
           })}
         </div>
       </div>
