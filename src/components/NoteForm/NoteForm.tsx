@@ -5,7 +5,8 @@ import { useForm } from "react-hook-form";
 import { useNotesContext } from "@/context/NoteContext";
 
 const NoteForm = () => {
-  const { createNote, setSelectedNote, selectedNote } = useNotesContext();
+  const { createNote, setSelectedNote, selectedNote, updateNote } =
+    useNotesContext();
 
   const {
     register,
@@ -21,7 +22,7 @@ const NoteForm = () => {
     },
   });
 
-  const onCancelEdit = () => {
+  const onClearEdit = () => {
     setSelectedNote?.(undefined);
     reset({
       title: "",
@@ -30,9 +31,15 @@ const NoteForm = () => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    createNote(data);
     setFocus("title");
-    reset();
+
+    if (selectedNote) {
+      await updateNote?.(selectedNote.id, data);
+      onClearEdit();
+    } else {
+      await createNote(data);
+      reset();
+    }
   });
 
   React.useEffect(() => {
@@ -41,12 +48,14 @@ const NoteForm = () => {
 
   React.useEffect(() => {
     if (selectedNote) {
+      setFocus("title");
+
       reset({
         title: selectedNote.title,
         content: selectedNote.content,
       });
     }
-  }, [reset, selectedNote]);
+  }, [reset, selectedNote, setFocus]);
 
   return (
     <form onSubmit={onSubmit}>
@@ -76,7 +85,7 @@ const NoteForm = () => {
           <button
             className="px-5 py-2 text-white bg-slate-400 rounded-md hover:bg-slate-500"
             type="button"
-            onClick={onCancelEdit}
+            onClick={onClearEdit}
           >
             Cancel
           </button>

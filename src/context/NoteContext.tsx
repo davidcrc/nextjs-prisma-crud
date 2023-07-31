@@ -14,6 +14,7 @@ const NoteContext = createContext<{
   deleteNote: (id: number) => Promise<void>;
   selectedNote?: NoteItem;
   setSelectedNote?: (note?: NoteItem) => void;
+  updateNote?: (id: number, note: Note) => Promise<void>;
 }>({
   notes: [],
   loadNotes: async () => {},
@@ -58,6 +59,20 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
     setNotes(notes.filter((note) => note.id !== deletedNote.id));
   }
 
+  async function updateNote(id: number, note: Note) {
+    const res = await fetch(`http://localhost:3000/api/notes/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(note),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const updatedNote = await res.json();
+
+    setNotes(notes.map((note) => (note.id === id ? updatedNote : note)));
+  }
+
   return (
     <NoteContext.Provider
       value={{
@@ -67,6 +82,7 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
         deleteNote,
         selectedNote,
         setSelectedNote,
+        updateNote,
       }}
     >
       {children}
