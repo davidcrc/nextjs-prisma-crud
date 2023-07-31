@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useNotesContext } from "@/context/NoteContext";
 
 const NoteForm = () => {
-  const router = useRouter();
+  const { createNote } = useNotesContext();
 
   const {
     register,
@@ -21,17 +21,8 @@ const NoteForm = () => {
   });
 
   const onSubmit = handleSubmit(async (data) => {
-    const { title, content } = data;
-
-    const res = await fetch("/api/notes", {
-      method: "POST",
-      body: JSON.stringify({ title, content }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    createNote(data);
     reset();
-    router.refresh();
   });
 
   return (

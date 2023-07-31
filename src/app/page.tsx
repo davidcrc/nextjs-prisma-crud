@@ -1,15 +1,15 @@
-import { NoteForm } from "../components";
+"use client";
 
-async function loadNotes() {
-  const res = await fetch("http://localhost:3000/api/notes");
-  const data = await res.json();
+import { NoteForm } from "@/components";
+import { useNotesContext } from "@/context/NoteContext";
+import { useEffect } from "react";
 
-  return data;
-}
+export default function Home() {
+  const { notes, loadNotes } = useNotesContext();
 
-export default async function Home() {
-  const notes = await loadNotes();
-  console.log("dd", notes);
+  useEffect(() => {
+    loadNotes();
+  }, []);
 
   return (
     <div className="flex items-center justify-center h-screen">
