@@ -8,8 +8,8 @@ export default function Home() {
   const { loading, notes, loadNotes } = useNotesContext();
 
   return (
-    <div className="flex py-8 justify-center h-screen">
-      <div className="flex flex-col h-full">
+    <div className="flex py-6 justify-center h-screen  ">
+      <div className="flex flex-col h-full  w-full max-w-lg">
         <NoteForm />
 
         {
